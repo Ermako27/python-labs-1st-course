@@ -1,0 +1,112 @@
+from tkinter import *
+import math as m
+def dlina(x1, y1, x2, y2):
+    return m.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+
+def S(x1, y1, x2, y2, x3, y3):
+    a = dlina(x1, y1, x2, y2)
+    b = dlina(x1, y1, x3, y3)
+    c = dlina(x3, y3, x2, y2)
+    p = (a + b + c) / 2
+    return m.sqrt(p * (p - a) * (p - b) * (p - c))
+
+
+def my_tr(x1, y1, x2, y2, x3, y3, dotx, doty):
+    s = S(x1, y1, x2, y2, x3, y3)
+    s1 = S(x1, y1, x2, y2, dotx, doty)
+    s2 = S(x1, y1, x3, y3, dotx, doty)
+    s3 = S(x3, y3, x2, y2, dotx, doty)
+
+    k = round((s1+s2+s3),0)
+    s = round((s),0)
+
+    if s == k:
+        return 1
+    else:
+        return 0
+
+def my_circ(dotx, doty, x, y, rad):
+    d = m.sqrt((y - doty) ** 2 + (x - dotx) ** 2)
+
+    if d < rad:
+        return 1
+    else:
+        return 0
+
+tochki = [(3, 4), (5, 6), (6, 7), (7, 6), (4, 5), (3, 5)]
+triangles = [((2,4),(5,7),(7,1)),((5,7),(7,6),(6,5))]
+circ = [(7,5,2),(3,3,1)]
+
+
+cnt = 0
+k = 0
+max_t = 0
+for t in triangles:
+    for d in tochki:
+        p = my_tr(t[0][0],t[0][1],t[1][0],t[1][1],t[2][0],t[2][1],d[0],d[1])
+        cnt += p
+
+
+
+
+
+
+    if cnt > max_t:
+        max_t = cnt
+        k = t
+        cnt = 0
+
+
+print(max_t)
+cnt1 = 0
+h = 0
+max_c = 0
+for o in circ:
+    for d in tochki:
+        l = my_circ(d[0],d[1],o[0],o[1],o[2])
+        cnt1 += l
+
+    if cnt1 > max_c:
+        max_c = cnt1
+        h = o
+        cnt = 0
+
+print(max_c)
+
+
+root = Tk()
+canv = Canvas(root, width=3000, height=3000, bg='white')
+
+if max_t > max_c:
+
+    x1, y1 = k[0][0] * 100, k[0][1] * 100
+    x2, y2 = k[1][0] * 100, k[1][1] * 100
+    x3, y3 = k[2][0] * 100, k[2][1] * 100
+    canv.create_line(x1, y1, x2, y2, width=5)
+    canv.create_line(x2, y2, x3, y3, width=5)
+    canv.create_line(x3, y3, x1, y1, width=5)
+
+    x4, y4 = triangles[1][0][0] * 100, triangles[1][0][1] * 100
+    x5, y5 = triangles[1][1][0] * 100, triangles[1][1][1] * 100
+    x6, y6 = triangles[1][2][0] * 100, triangles[1][2][1] * 100
+    canv.create_line(x4, y4, x5, y5, width=1)
+    canv.create_line(x5, y5, x6, y6, width=1)
+    canv.create_line(x6, y6, x4, y4, width=1)
+
+canv.create_oval(circ[0][0]*100-200,circ[0][1]*100-200,circ[0][0]*100+200,circ[0][1]*100+200, width=2)
+canv.create_oval(circ[1][0]*100-100,circ[1][1]*100-100,circ[1][0]*100+100,circ[1][1]*100+100, width=2)
+#for i in range(len(triangles)):
+ #   canv.create_line(i[0][0]*100, i[0][1]*100, i[1][0]*100, i[1][1]*100, width=2)
+  #  canv.create_line(i[0][0]*100, i[0][1]*100, i[2][0]*100, i[2][1]*100, width=2)
+   # canv.create_line(i[1][0]*100, i[1][1]*100, i[2][0]*100, i[2][1]*100, width=2)
+
+
+
+for i in range(len(tochki)):
+    x = tochki[i][0] * 100
+    y = tochki[i][1] * 100
+    canv.create_oval(x - 5, y - 5, x + 5, y + 5, width=1, fill='red')
+
+canv.pack()
+root.mainloop()

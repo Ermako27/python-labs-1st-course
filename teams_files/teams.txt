@@ -1,0 +1,5 @@
+команда голы позиция
+spartak 45 5
+dinamo 67 7
+lokomotiv 32 10
+cska 87 1
